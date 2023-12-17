@@ -4,6 +4,7 @@ import darkModeReducer from '../features/settings/darkModeSlice';
 import cartReducer from '../features/supermarket/cartSlice';
 import superReducer from '../features/supermarket/superSlice';
 import registerReducer from '../features/login/registerSlice';
+import managementReducer from '../features/management/managementSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
     darkMode: darkModeReducer,
     cart: cartReducer,
     super: superReducer,
-    register: registerReducer
+    register: registerReducer,
+    management: managementReducer
   },
 });
 

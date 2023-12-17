@@ -18,6 +18,7 @@ import Super from './features/supermarket/Super';
 import Contact from './Contact';
 import Profile from './Profile';
 import Register from './features/login/Register';
+import Adminproducts from './features/management/Adminproducts';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -39,6 +40,8 @@ root.render(
               <Route path="register" element={<Register />} />
               <Route path="contact" element={<Contact />} />
               <Route path="profile" element={<Profile />} />
+              {/* Admin */}
+              <Route path="allproducts" element={<Adminproducts />} />
             </Route>
           </Routes>
         </BrowserRouter>

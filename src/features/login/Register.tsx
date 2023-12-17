@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { registerAsync, register_status, reset_status } from './registerSlice';
 import { Message } from '../../Message';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faEnvelope, faIdCard, faUserCircle, faCalendarAlt, faVenusMars, faLock } from '@fortawesome/free-solid-svg-icons';
+
 
 
 const Register = () => {
@@ -31,11 +34,11 @@ const Register = () => {
 
 
     useEffect(() => {
-      if(logged){
-        navigate("/")
-      }
-    }, [navigate,logged])
-    
+        if (logged) {
+            navigate("/")
+        }
+    }, [navigate, logged])
+
 
     const RegisterAccount = () => {
 
@@ -51,8 +54,8 @@ const Register = () => {
             Message("Username was not entered", "error")
             return
         }
-        if(!fnamevalue || !lnamevalue){
-            Message("Firstname or Lastname weren't entered","error")
+        if (!fnamevalue || !lnamevalue) {
+            Message("Firstname or Lastname weren't entered", "error")
             return
         }
 
@@ -71,7 +74,7 @@ const Register = () => {
             return
         }
 
-        if(passvalue !== confirm_password){
+        if (passvalue !== confirm_password) {
             Message("Passwords are not equal", "error")
             return
         }
@@ -98,42 +101,42 @@ const Register = () => {
 
                         <div className="form-group">
                             <label htmlFor="username">
-                                <i className="fas fa-user"></i> Username:
+                                <FontAwesomeIcon icon={faUser} /> Username:
                             </label>
-                            <input type="text" className="form-control" name="username" placeholder="karen123" onChange={handleInputChange} required/>
+                            <input type="text" className="form-control" name="username" placeholder="karen123" onChange={handleInputChange} required />
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="email">
-                                <i className="fas fa-envelope"></i> Email Address:
+                                <FontAwesomeIcon icon={faEnvelope} /> Email Address:
                             </label>
-                            <input type="email" className="form-control" name="email" placeholder="example@gmail.com" onChange={handleInputChange} required/>
+                            <input type="email" className="form-control" name="email" placeholder="example@gmail.com" onChange={handleInputChange} required />
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="firstname">
-                                <i className="fas fa-id-card"></i> Firstname:
+                                <FontAwesomeIcon icon={faIdCard} /> Firstname:
                             </label>
-                            <input type="text" className="form-control" name="firstname" placeholder="avner" onChange={handleInputChange} required/>
+                            <input type="text" className="form-control" name="firstname" placeholder="avner" onChange={handleInputChange} required />
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="lastname">
-                                <i className="fas fa-user-circle"></i> Lastname:
+                                <FontAwesomeIcon icon={faUserCircle} /> Lastname:
                             </label>
-                            <input type="text" className="form-control" name="lastname" placeholder="yeruham" onChange={handleInputChange} required/>
+                            <input type="text" className="form-control" name="lastname" placeholder="yeruham" onChange={handleInputChange} required />
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="dob">
-                                <i className="fas fa-calendar-alt"></i> Birthdate:
+                                <FontAwesomeIcon icon={faCalendarAlt} /> Birthdate:
                             </label>
-                            <input type="date" className="form-control" name="dob" required onChange={handleInputChange} value="2000-01-01"/>
+                            <input type="date" className="form-control" name="dob" required onChange={handleInputChange} value="2000-01-01" />
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="gender">
-                                <i className="fas fa-venus-mars"></i> Gender:
+                                <FontAwesomeIcon icon={faVenusMars} /> Gender:
                             </label>
                             <select defaultValue={''} name="gender" required onChange={handleInputChange}>
                                 <option value='' disabled>Select gender</option>
@@ -145,27 +148,27 @@ const Register = () => {
 
                         <div className="form-group">
                             <label htmlFor="password">
-                                <i className="fas fa-lock"></i> Password:
+                                <FontAwesomeIcon icon={faLock} /> Password:
                             </label>
-                            <input type="password" className="form-control" name="password" onChange={handleInputChange} required/>
+                            <input type="password" className="form-control" name="password" onChange={handleInputChange} required />
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="confirm_password">
-                                <i className="fas fa-lock"></i> Confirm Password
+                                <FontAwesomeIcon icon={faLock} /> Confirm Password
                             </label>
-                            <input type="password" className="form-control" name="confirm_password" onChange={handleInputChange} required/>
+                            <input type="password" className="form-control" name="confirm_password" onChange={handleInputChange} required />
                         </div>
 
-                        {status === '' ? 
-                            <button type="submit" onClick={()=>RegisterAccount()} className="btn btn-primary btn-block">Register</button>
+                        {status === '' ?
+                            <button type="submit" onClick={() => RegisterAccount()} className="btn btn-primary btn-block">Register</button>
                             :
-                            <button type="submit" onClick={()=>status === "rejected" ? dispatch(reset_status()) : Message("Register underway, Please Wait","error")} className='btn btn-warning btn-block'>{status}</button>
+                            <button type="submit" onClick={() => status === "rejected" ? dispatch(reset_status()) : Message("Register underway, Please Wait", "error")} className='btn btn-warning btn-block'>{status}</button>
                         }
                         <p className="mt-3 text-center">already have an account? <a href="login.html">Login</a></p>
                     </div>
                 </div>
-            ) : <>{navigate("/login")}</>}
+            ) : <></>}
         </div>
     );
 

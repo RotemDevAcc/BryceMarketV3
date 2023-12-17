@@ -5,6 +5,9 @@ import { TargetServer } from './features/settings/settings';
 import { Modal, Button } from 'react-bootstrap';
 import { Message } from './Message';
 import { useAppDispatch, useAppSelector } from './app/hooks';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faEnvelope, faCalendarAlt, faVenusMars, faIdCard } from '@fortawesome/free-solid-svg-icons';
+
 
 const ModalTypes = {
     Clear: 0,
@@ -167,19 +170,19 @@ const Profile = () => {
                         </button>
                         <ul>
                             <li>
-                                <i className="fas fa-user"></i> Username: {myDetails.username}
+                                <FontAwesomeIcon icon={faUser} /> Username: {myDetails.username}
                             </li>
                             <li>
-                                <i className="fas fa-envelope"></i> Email: {myDetails.email}
+                                <FontAwesomeIcon icon={faEnvelope} /> Email: {myDetails.email}
                             </li>
                             <li>
-                                <i className="fas fa-calendar-alt"></i> Date Of Birth: {myDetails.dob}
+                                <FontAwesomeIcon icon={faCalendarAlt} /> Date Of Birth: {myDetails.dob}
                             </li>
                             <li>
-                                <i className="fas fa-venus-mars"></i> Gender: {myDetails.gender}
+                                <FontAwesomeIcon icon={faVenusMars} /> Gender: {myDetails.gender}
                             </li>
                             <li>
-                                <i className="fas fa-id-card"></i> Fullname: {fullname}
+                                <FontAwesomeIcon icon={faIdCard} /> Fullname: {fullname}
                                 <br />
                                 <button className="btn btn-primary" onClick={newName}>
                                     Change Name

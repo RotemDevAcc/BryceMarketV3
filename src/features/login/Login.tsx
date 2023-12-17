@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -24,6 +24,13 @@ const Login = () => {
     }
   }
 
+  useEffect(() => {
+    // Use useEffect to navigate after the component has been rendered
+    if (logged) {
+      navigate('/');
+    }
+  }, [logged, navigate]);
+
   return (
     <div>
       {!logged ? (
@@ -45,7 +52,7 @@ const Login = () => {
             </p>
           </div>
         </div>
-      ) : <>{navigate("/")}</>}
+      ) : <></>}
     </div>
   );
 
