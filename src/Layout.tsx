@@ -1,9 +1,9 @@
 // Layout.js
 import React from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { is_user_logged, user_logout, is_user_staff, get_user_details } from './features/login/loginSlice';
+import { is_user_logged, user_logout, is_user_staff, get_user_details } from './components/login/loginSlice';
 import { useAppDispatch, useAppSelector } from './app/hooks';
-import { TargetServer } from './features/settings/settings';
+import { TargetServer } from './components/settings/settings';
 
 
 const Layout = () => {

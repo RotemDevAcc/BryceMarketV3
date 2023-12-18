@@ -6,19 +6,19 @@ import App from './App';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // Components
-import Login from './features/login/Login';
-import DarkMode from './features/settings/DarkMode';
+import Login from './components/login/Login';
+import DarkMode from './components/settings/DarkMode';
 // End Components
 
 // Other
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Layout from './Layout';
-import Super from './features/supermarket/Super';
+import Super from './components/supermarket/Super';
 import Contact from './Contact';
 import Profile from './Profile';
-import Register from './features/login/Register';
-import Adminproducts from './features/management/Adminproducts';
+import Register from './components/login/Register';
+import Adminproducts from './components/management/Adminproducts';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);

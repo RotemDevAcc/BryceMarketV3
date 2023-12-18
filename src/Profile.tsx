@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { selectDarkMode, toggleDarkMode } from './features/settings/darkModeSlice';
-import { changeFullNameAsync, changePicAsync, get_user_details, get_user_token } from './features/login/loginSlice';
-import { TargetServer } from './features/settings/settings';
+import { selectDarkMode, toggleDarkMode } from './components/settings/darkModeSlice';
+import { changeFullNameAsync, changePicAsync, get_user_details, get_user_token } from './components/login/loginSlice';
+import { TargetServer } from './components/settings/settings';
 import { Modal, Button } from 'react-bootstrap';
 import { Message } from './Message';
 import { useAppDispatch, useAppSelector } from './app/hooks';

@@ -1,10 +1,10 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import loginReducer from '../features/login/loginSlice';
-import darkModeReducer from '../features/settings/darkModeSlice';
-import cartReducer from '../features/supermarket/cartSlice';
-import superReducer from '../features/supermarket/superSlice';
-import registerReducer from '../features/login/registerSlice';
-import managementReducer from '../features/management/managementSlice';
+import loginReducer from '../components/login/loginSlice';
+import darkModeReducer from '../components/settings/darkModeSlice';
+import cartReducer from '../components/supermarket/cartSlice';
+import superReducer from '../components/supermarket/superSlice';
+import registerReducer from '../components/login/registerSlice';
+import managementReducer from '../components/management/managementSlice';
 
 export const store = configureStore({
   reducer: {
