@@ -222,8 +222,8 @@ const Adminproducts = () => {
             {status === "done" ? (
                 <div>
                     <div className="text-center mt-3">
-                        <button className="btn btn-success" onClick={() => addProduct()}>Add Product <FontAwesomeIcon icon={faPlus} /></button>
-                        <button className="btn btn-success" style={{ marginLeft: "10px" }} onClick={() => addCategory()}>Add Category <FontAwesomeIcon icon={faPlusCircle} /></button>
+                        <button className="btn btn-primary" onClick={() => addProduct()}>Add Product <FontAwesomeIcon icon={faPlus} /></button>
+                        <button className="btn btn-primary" style={{ marginLeft: "10px" }} onClick={() => addCategory()}>Add Category <FontAwesomeIcon icon={faPlusCircle} /></button>
                     </div>
 
                     {displayprods}

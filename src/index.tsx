@@ -20,6 +20,8 @@ import Profile from './Profile';
 import Register from './components/login/Register';
 import Adminproducts from './components/management/Adminproducts';
 import Adminhome from './components/management/Adminhome';
+import Receipts from './components/management/Receipts';
+import Customers from './components/management/Customers';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -44,6 +46,8 @@ root.render(
               {/* Admin */}
               <Route path="admin" element={<Adminhome />} />
               <Route path="allproducts" element={<Adminproducts />} />
+              <Route path="receipts" element={<Receipts />} />
+              <Route path="customers" element={<Customers />} />
             </Route>
           </Routes>
         </BrowserRouter>
