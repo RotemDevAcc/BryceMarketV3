@@ -19,6 +19,7 @@ import Contact from './Contact';
 import Profile from './Profile';
 import Register from './components/login/Register';
 import Adminproducts from './components/management/Adminproducts';
+import Adminhome from './components/management/Adminhome';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -41,6 +42,7 @@ root.render(
               <Route path="contact" element={<Contact />} />
               <Route path="profile" element={<Profile />} />
               {/* Admin */}
+              <Route path="admin" element={<Adminhome />} />
               <Route path="allproducts" element={<Adminproducts />} />
             </Route>
           </Routes>

@@ -19,6 +19,7 @@ const Layout = () => {
         '/contact': 'Contact',
         '/login': 'Login',
         '/profile': 'My Profile',
+        // Staff Routes
         '/admin': 'Admin Home',
         '/customers': 'Customers',
         '/allproducts': 'All Products',
@@ -27,12 +28,6 @@ const Layout = () => {
     };
 
     const headerText = routeHeaders[location.pathname] || '';
-
-    // if(logged){
-    //     userpicture.innerHTML = `<img src="${TargetServer}/static/images/${myDetails.img}" alt="Profile Logo" class="navbar-brand img-fluid" height = "40px" width="40px" style="border-radius: 50px;">`
-    //     userpicture.style.display = "block";
-    // }
-
     return (
         <div>
             <header className="bg-dark text-white">
