@@ -24,13 +24,15 @@ export interface LoginInterface {
   loggedin: boolean,
   token: string,
   userDetails: UserDetails
+  status:string,
 
 }
 
 const initialState: LoginInterface = {
   loggedin: getUserDetailsFromSessionStorage() ? true : false,
   token: sessionStorage.getItem('token') || "",
-  userDetails: getUserDetailsFromSessionStorage() || []
+  userDetails: getUserDetailsFromSessionStorage() || [],
+  status:""
 };
 
 
@@ -91,6 +93,7 @@ export const loginSlice = createSlice({
             "is_staff": state.userDetails.is_staff
           }));
           state.loggedin = true
+          state.status = "done"
           Message("Welcome Back " + state.userDetails.username, "success")
         } else {
           Message("A Problem has occured, try again later.", "error")
@@ -99,6 +102,12 @@ export const loginSlice = createSlice({
         // state.userDetails = parseJwt(state.token)
         // sessionStorage.setItem("token", state.token);
 
+      })
+      .addCase(loginAsync.pending, (state,action) => {
+        state.status = "pending"
+      })
+      .addCase(loginAsync.rejected, (state,action) => {
+        state.status = "rejected"
       })
       .addCase(changePicAsync.fulfilled, (state, action) => {
         const data = action.payload
@@ -148,5 +157,6 @@ export const is_user_logged = (state: { login: { loggedin: boolean; }; }) => sta
 export const is_user_staff = (state: { login: LoginInterface; }) => state.login.userDetails.is_staff;
 export const get_user_details = (state: { login: { userDetails: UserDetails; }; }) => state.login.userDetails;
 export const get_user_token = (state: { login: { token: string; }; }) => state.login.token;
+export const get_login_status = (state:{login: {status:string;}}) => state.login.status;
 
 export default loginSlice.reducer;

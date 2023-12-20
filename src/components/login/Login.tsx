@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { is_user_logged, loginAsync } from './loginSlice';
+import { get_login_status, is_user_logged, loginAsync } from './loginSlice';
+import { Message } from '../../Message';
 
 
 const Login = () => {
@@ -10,6 +11,7 @@ const Login = () => {
   const dispatch = useAppDispatch();
   const [userName, setusername] = useState("")
   const [password, setpassword] = useState("")
+  const status = useAppSelector(get_login_status);
   const logged = useAppSelector(is_user_logged);
   const navigate = useNavigate()
 
@@ -17,6 +19,12 @@ const Login = () => {
     const details = { userName: userName, password: password };
 
     try {
+
+      if(!details.userName && !details.password){
+        Message("You Have To Type a username and a password.","error")
+        return
+      }
+
       dispatch(loginAsync(details));
     } catch (error) {
       // Handle any errors
@@ -30,6 +38,12 @@ const Login = () => {
       navigate('/');
     }
   }, [logged, navigate]);
+
+  const buttontypes:any = {
+    "pending":"warning",
+    "done":"success",
+    "rejected":"danger"
+  }
 
   return (
     <div>
@@ -46,7 +60,8 @@ const Login = () => {
               <label htmlFor="password">Password:</label>
               <input type="password" onChange={(e) => setpassword(e.target.value)} className="form-control" id="password" name="password" required />
             </div>
-            <button type="submit" onClick={() => login_user()} className="btn btn-primary btn-block">Login</button>
+
+            <button type="submit" onClick={() => login_user()} className={`btn btn-${buttontypes[status] || "primary"} btn-block`}>Login {status}</button>
             <p className="mt-3 text-center">
               Don't have an account? <Link to="/register">Create New Account</Link>
             </p>
