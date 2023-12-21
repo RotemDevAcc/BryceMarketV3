@@ -3,7 +3,7 @@ import { TargetServer } from "../settings/settings"
 import { Message } from "../../Message";
 
 
-
+// Products
 export function getAllProducts(token:string) {
     if(!token || token === ""){
         return {data:{state:"error","message":"User not found, Relog and try Again."}}
@@ -99,3 +99,61 @@ export async function removeAdminProducts(details:{productid:number, token:strin
         throw error;
     });
 }
+// End Products
+
+// Customers
+export function getAllCustomers(token:string) {
+    if(!token || token === ""){
+        return {data:{state:"error","message":"User not found, Relog and try Again."}}
+    }
+    return axios.get(`${TargetServer}umanagement/`,{
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+}
+
+export async function editAdminStaff(details:{userid:number, set:boolean, token:string}) {
+    const token = details.token
+    if(!token || token === ""){
+        return {data:{state:"error","message":"User not found, Relog and try Again."}}
+    }
+    return axios.put(`${TargetServer}umanagement/set/`,details,{
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then(response => {
+        return response;
+    })
+    .catch(error => {
+        console.error('Error while sending data to the server:', error);
+        Message(error.response.data.detail,"error")
+        throw error;
+    });
+}
+
+
+export async function admin_removeuser(details:{userid:number, token:string}) {
+    const token = details.token
+    if(!token || token === ""){
+        return {data:{state:"error","message":"User not found, Relog and try Again."}}
+    }
+    return axios.delete(`${TargetServer}umanagement/delete/${details.userid}/`,{
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then(response => {
+        return response;
+    })
+    .catch(error => {
+        console.error('Error while sending data to the server:', error);
+        Message(error.response.data.detail,"error")
+        throw error;
+    });
+}
+
+
+
+// End Customers

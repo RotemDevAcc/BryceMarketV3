@@ -6,7 +6,7 @@ import { Modal, Button } from 'react-bootstrap';
 import { Message } from './Message';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faEnvelope, faCalendarAlt, faVenusMars, faIdCard } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faEnvelope, faCalendarAlt, faVenusMars, faIdCard, faMoon, faSun, faImage, faReceipt } from '@fortawesome/free-solid-svg-icons';
 
 
 const ModalTypes = {
@@ -160,13 +160,15 @@ const Profile = () => {
                         <div className="card-body">
                             <h5 className="card-title">{myDetails.username}</h5>
                             <button className="btn btn-primary" onClick={newPicture}>
-                                Change Picture
+                                Change Picture{' '}
+                                <FontAwesomeIcon icon={faImage} />
                             </button>
                         </div>
                     </div>
                     <div>
                         <button id="receiptButton" className="btn btn-success" onClick={ShowReceipts}>
-                            My Receipts
+                            My Receipts{' '}
+                            <FontAwesomeIcon icon={faReceipt}/>
                         </button>
                         <ul>
                             <li>
@@ -185,6 +187,8 @@ const Profile = () => {
                                 <FontAwesomeIcon icon={faIdCard} /> Fullname: {fullname}
                                 <br />
                                 <button className="btn btn-primary" onClick={newName}>
+                                    
+                                    
                                     Change Name
                                 </button>
                             </li>
@@ -195,9 +199,9 @@ const Profile = () => {
 
             // Rest of your initialization logic
 
-            if (myDetails.is_staff) {
-                // Additional logic for staff
-            }
+            // if (myDetails.is_staff) {
+            //     // Additional logic for staff
+            // }
         }
     }, [myDetails]);
 
@@ -215,9 +219,14 @@ const Profile = () => {
 
             <div className="container mt-4">
                 <h2>Settings:</h2>
-                <button className={darkMode ? "btn btn-primary" : "btn btn-secondary"} onClick={() => dispatch(toggleDarkMode())}>
+                {/* <button className={darkMode ? "btn btn-primary" : "btn btn-secondary"} onClick={() => dispatch(toggleDarkMode())}>
                     {darkMode ? 'Normal Mode' : 'Dark Mode'}
-                </button>
+                </button> */}
+                
+                <div className="custom-control custom-switch">
+                    <input type="checkbox" className="custom-control-input" id="customSwitches" checked={darkMode}></input>
+                    <label className="custom-control-label" htmlFor="customSwitches" onClick={() => dispatch(toggleDarkMode())}>{darkMode ? <FontAwesomeIcon icon={faMoon}></FontAwesomeIcon> : <FontAwesomeIcon icon={faSun}></FontAwesomeIcon>} Toggle Darkmode</label>
+                </div>
             </div>
             <Modal show={showModal === ModalTypes.NEW_PICTURE} onHide={handleIMGCancel}>
                 <Modal.Header>

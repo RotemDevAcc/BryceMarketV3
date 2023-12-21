@@ -4,6 +4,8 @@ import { purchaseCart } from './superSlice';
 import { Modal, Button } from 'react-bootstrap';
 import { get_user_token } from '../login/loginSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBroom, faCashRegister, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
 const Cart = () => {
     const myCart = useAppSelector(selectCart)
@@ -35,7 +37,8 @@ const Cart = () => {
         <div>
             <div className="card">
                 <div className="card-header">
-                    Shopping Cart
+                    Shopping Cart{' '}
+                    <FontAwesomeIcon icon={faShoppingCart}/>
                 </div>
                 <ul className="list-group list-group-flush" id="cart-items">
                     {myCart.map((prod, index) => (
@@ -54,10 +57,12 @@ const Cart = () => {
 
                     {/* </div> */}
                     <button className="btn btn-primary" onClick={() => show_dialog()} style={{ margin: 5 }}>
-                        Checkout
+                        Checkout{' '}
+                        <FontAwesomeIcon icon={faCashRegister} />
                     </button>
                     <button className="btn btn-danger" onClick={() => dispatch(clearCart())}>
-                        Clear Cart
+                        Clear Cart{' '}
+                        <FontAwesomeIcon icon={faBroom} />
                     </button>
 
 
