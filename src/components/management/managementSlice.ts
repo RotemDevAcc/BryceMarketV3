@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { addAdminCategory, addAdminProducts, admin_removeuser, editAdminProducts, editAdminStaff, getAllCustomers, getAllProducts, removeAdminProducts } from './managementAPI';
+import { addAdminCategory, addAdminProducts, admin_getuserreceipts, admin_removeuser, editAdminProducts, editAdminStaff, getAllCustomers, getAllProducts, removeAdminProducts } from './managementAPI';
 import { Message } from '../../Message';
 
 
@@ -30,11 +30,18 @@ export interface CustomersDetails {
     is_staff: boolean
 }
 
+export interface ReceiptDetails {
+    id: number;
+    price:number;
+    products:AllProductDetails[];
+}
+
 export interface ManagementINT {
     status: string;
     products: AllProductDetails[];
     categories: SCategoryDetails[];
     customers: CustomersDetails[];
+    receipts: ReceiptDetails[];
 }
 
 
@@ -47,6 +54,7 @@ const initialState: ManagementINT = {
     products: [],
     categories: [],
     customers: [],
+    receipts: [],
     status: "",
 };
 
@@ -120,6 +128,14 @@ export const AdminremoveUserAsync = createAsyncThunk(
     }
 );
 
+export const AdmingetUserReceiptsAsync = createAsyncThunk(
+    'management/admin_getuserreceipts',
+    async (details: { userid: number, token: string }) => {
+        const response = await admin_getuserreceipts(details);
+        return response.data;
+    }
+);
+
 // End Customers
 
 
@@ -135,8 +151,6 @@ export const managementSlice = createSlice({
             const payload = action.payload
             if (payload) {
                 if (typeof (payload) == "string") state.status = payload
-
-                // console.log("Set To "+payload)
             }
         },
 
@@ -240,7 +254,6 @@ export const managementSlice = createSlice({
             .addCase(getAdminCustomersAsync.fulfilled, (state, action) => {
                 const payload = action.payload
                 if (payload) {
-                    console.log(payload)
                     state.customers = payload
                     state.status = 'done'
                 } else {
@@ -284,7 +297,6 @@ export const managementSlice = createSlice({
                     Message(payload.message, "success")
                     const rcustomer = payload.customer
                     if (rcustomer) {
-                        console.log(rcustomer)
                         state.customers = state.customers.filter(customer => customer.id !== rcustomer.id)
                     }
 
@@ -296,6 +308,20 @@ export const managementSlice = createSlice({
             .addCase(AdminremoveUserAsync.rejected, (state,action) => {
                 Message("Remove User Failed", "error")
             })
+
+            .addCase(AdmingetUserReceiptsAsync.fulfilled, (state,action) => {
+                const payload = action.payload
+                if (payload.state === "error") {
+                    Message(payload.message, payload.state)
+                    // state.status = 'failed'
+                    return
+                }
+                if (payload.success) {
+                    state.receipts = payload.receipts
+                } else {
+                    Message(payload.message, "error")
+                }
+            })
     },
 
 });
@@ -305,5 +331,6 @@ export const selectastatus = (state: { management: { status: string; }; }) => st
 export const get_admin_products = (state: RootState) => state.management.products
 export const get_admin_categories = (state: RootState) => state.management.categories
 export const get_admin_customers = (state: RootState) => state.management.customers
+export const get_admin_receipts = (state: RootState) => state.management.receipts
 
 export default managementSlice.reducer;

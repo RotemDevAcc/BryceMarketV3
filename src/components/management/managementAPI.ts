@@ -154,6 +154,18 @@ export async function admin_removeuser(details:{userid:number, token:string}) {
     });
 }
 
+export function admin_getuserreceipts(details:{userid:number,token:string}) {
+    const token = details.token
+    if(!token || token === ""){
+        return {data:{state:"error","message":"User not found, Relog and try Again."}}
+    }
+    return axios.get(`${TargetServer}/umanagement/receipts/${details.userid}`,{
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+}
+
 
 
 // End Customers

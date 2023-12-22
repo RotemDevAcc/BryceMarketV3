@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { get_user_token } from '../login/loginSlice'
-import { AdminremoveUserAsync, editAdminStaffAsync, getAdminCustomersAsync, get_admin_customers, selectastatus, updateStatus } from './managementSlice'
-import { faEdit, faReceipt, faRemove } from '@fortawesome/free-solid-svg-icons'
-import { TargetServer } from '../settings/settings'
+import { AdmingetUserReceiptsAsync, AdminremoveUserAsync, editAdminStaffAsync, getAdminCustomersAsync, getAdminProductsAsync, get_admin_customers, get_admin_products, get_admin_receipts, selectastatus, updateStatus } from './managementSlice'
+import { faBox, faDollarSign, faEdit, faReceipt, faRemove, faShoppingCart } from '@fortawesome/free-solid-svg-icons'
+import { TargetServer, numberWithCommas } from '../settings/settings'
 import { Message } from '../../Message'
 import { Button, Modal } from 'react-bootstrap'
 
@@ -16,16 +16,22 @@ const Modals = {
 }
 
 const Customers = () => {
-    const [searchuser, setsearchuser] = useState('')
 
-    const [userList, setuserList] = useState<JSX.Element[]>([]);
-    const [editList, seteditList] = useState<JSX.Element[]>([]);
-    const [deletetitle, setdeletetitle] = useState('')
-    const [deleteBody, setdeleteBody] = useState<JSX.Element[]>([]);
     const dispatch = useAppDispatch()
     const token = useAppSelector(get_user_token)
     const customers = useAppSelector(get_admin_customers)
+    const selectedreceipts = useAppSelector(get_admin_receipts)
+    const allproducts = useAppSelector(get_admin_products)
     const status = useAppSelector(selectastatus)
+    
+    
+    const [userList, setuserList] = useState<JSX.Element[]>([]);
+    const [editList, seteditList] = useState<JSX.Element[]>([]);
+    const [receiptList, setreceiptList] = useState<JSX.Element[]>([]);
+    const [deleteBody, setdeleteBody] = useState<JSX.Element[]>([]);
+
+    const [deletetitle, setdeletetitle] = useState('')
+    const [searchuser, setsearchuser] = useState('')
     const [showmodal, setshowmodal] = useState(Modals.hide)
 
 
@@ -91,15 +97,58 @@ const Customers = () => {
         setdeleteBody([deletebody])
         setshowmodal(Modals.deleteuser)
     }, [handleRemoveUser])
-    const userReceipts = (userid: number) => {
 
-    }
+
+    const GetProductName = useCallback((productid: number) => {
+        const foundProduct = allproducts.find(product => Number(product.id) === Number(productid));
+        return foundProduct ? foundProduct.name : 'Product Not Found';
+    }, [allproducts])
+
+    const formatProducts =useCallback((products:any) =>{
+        const prods = JSON.parse(products)
+        const productItems = prods.map((product:any,index:number) => (
+            <div key={`${index}format`}>
+                <li className='list-group-item'>
+                    <FontAwesomeIcon icon={faShoppingCart}/> Product Name: {GetProductName(product.item)}<br/> 
+                    <FontAwesomeIcon icon={faBox}/> Count: {product.count}<br/> 
+                    <FontAwesomeIcon icon={faDollarSign}/> Price: ${product.price}<br/>
+                </li> 
+            </div>
+        ));
+        return productItems
+    }, [GetProductName])
+
+    const userReceipts = useCallback(async (userid: number) => {
+        dispatch(AdmingetUserReceiptsAsync({userid,token}))        
+    },[dispatch,token])
+    
+
+    useEffect(() => {
+
+        if (selectedreceipts.length > 0) {
+            const receiptbody = selectedreceipts.map((receipt,index) => (
+                <div key={index}>
+                    <strong>Receipt ID:</strong> {receipt.id}<br/>
+                    <strong>Price:</strong> ${numberWithCommas(receipt.price)}<br/>
+                    <strong>Products:</strong>
+                    <ul>
+                        {formatProducts(receipt.products)}
+                    </ul>
+                </div>
+            ));
+
+            setreceiptList(receiptbody)
+            setshowmodal(Modals.Receipts)
+        }
+    }, [dispatch,formatProducts,GetProductName,selectedreceipts])
+    
 
 
 
     useEffect(() => {
         dispatch(updateStatus("pending"))
         dispatch(getAdminCustomersAsync(token))
+        dispatch(getAdminProductsAsync(token))
     }, [dispatch, token])
 
     useEffect(() => {
@@ -125,7 +174,7 @@ const Customers = () => {
             const loadtext = <div key="loading">Loading Status: {status}</div>;
             setuserList([loadtext]);
         }
-    }, [customers, searchuser, status, editUser, GetUser, deleteUser])
+    }, [customers, searchuser, status, editUser, GetUser, deleteUser, userReceipts])
 
 
     return (
@@ -171,6 +220,20 @@ const Customers = () => {
                         </Button>
                     </Modal.Footer>
                 </Modal.Body>
+            </Modal>
+
+            <Modal show={showmodal === Modals.Receipts} onHide={()=>setshowmodal(Modals.hide)}>
+                <Modal.Header>
+                    <Modal.Title>Receipts</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {receiptList}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="danger" onClick={()=>setshowmodal(Modals.hide)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
             </Modal>
         </div>
     )
