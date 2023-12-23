@@ -166,6 +166,17 @@ export function admin_getuserreceipts(details:{userid:number,token:string}) {
     })
 }
 
-
-
 // End Customers
+
+// Receipts
+
+export function admin_getallreceipts(token:string){
+    if(!token || token === ""){
+        return {data:{state:"error","message":"User not found, Relog and try Again."}}
+    }
+    return axios.get(`${TargetServer}/getreceipts`,{
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+}

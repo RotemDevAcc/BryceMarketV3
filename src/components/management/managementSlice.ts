@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { addAdminCategory, addAdminProducts, admin_getuserreceipts, admin_removeuser, editAdminProducts, editAdminStaff, getAllCustomers, getAllProducts, removeAdminProducts } from './managementAPI';
+import { addAdminCategory, addAdminProducts, admin_getallreceipts, admin_getuserreceipts, admin_removeuser, editAdminProducts, editAdminStaff, getAllCustomers, getAllProducts, removeAdminProducts } from './managementAPI';
 import { Message } from '../../Message';
 
 
@@ -36,12 +36,25 @@ export interface ReceiptDetails {
     products:AllProductDetails[];
 }
 
+export interface ReceiverUser {
+    userid:number;
+    username:string;
+}
+
+export interface AllReceiptDetails {
+    id: number;
+    price:number;
+    products:AllProductDetails[];
+    recuser:ReceiverUser;
+}
+
 export interface ManagementINT {
     status: string;
     products: AllProductDetails[];
     categories: SCategoryDetails[];
     customers: CustomersDetails[];
     receipts: ReceiptDetails[];
+    allreceipts: AllReceiptDetails[];
 }
 
 
@@ -55,6 +68,7 @@ const initialState: ManagementINT = {
     categories: [],
     customers: [],
     receipts: [],
+    allreceipts: [],
     status: "",
 };
 
@@ -138,6 +152,17 @@ export const AdmingetUserReceiptsAsync = createAsyncThunk(
 
 // End Customers
 
+// Receipts
+
+export const AdmingetAllReceiptsAsync = createAsyncThunk(
+    'management/admin_getallreceipts',
+    async (token: string) => {
+        const response = await admin_getallreceipts(token);
+        return response.data;
+    }
+);
+// End Receipts
+
 
 
 
@@ -153,6 +178,10 @@ export const managementSlice = createSlice({
                 if (typeof (payload) == "string") state.status = payload
             }
         },
+
+        // resetReceipts: (state) => {
+        //     state.receipts = []
+        // }
 
 
 
@@ -318,6 +347,25 @@ export const managementSlice = createSlice({
                 }
                 if (payload.success) {
                     state.receipts = payload.receipts
+                    state.products = payload.products
+                } else {
+                    Message(payload.message, "error")
+                }
+            })
+
+            .addCase(AdmingetAllReceiptsAsync.fulfilled, (state,action) => {
+                const payload = action.payload
+                
+                if (payload.state === "error") {
+                    Message(payload.message, payload.state)
+                    // state.status = 'failed'
+                    return
+                }
+                if (payload.state === "success") {
+                    const receipts = payload.payload;
+                    receipts.sort((a:any, b:any) => b.id - a.id);
+                    state.allreceipts = receipts
+                    state.products = payload.products
                 } else {
                     Message(payload.message, "error")
                 }
@@ -332,5 +380,6 @@ export const get_admin_products = (state: RootState) => state.management.product
 export const get_admin_categories = (state: RootState) => state.management.categories
 export const get_admin_customers = (state: RootState) => state.management.customers
 export const get_admin_receipts = (state: RootState) => state.management.receipts
+export const get_admin_allreceipts = (state: RootState) => state.management.allreceipts
 
 export default managementSlice.reducer;

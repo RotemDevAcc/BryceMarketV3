@@ -119,37 +119,41 @@ const Customers = () => {
     }, [GetProductName])
 
     const userReceipts = useCallback(async (userid: number) => {
-        dispatch(AdmingetUserReceiptsAsync({userid,token}))        
+        dispatch(AdmingetUserReceiptsAsync({userid,token}))  
+        setshowmodal(Modals.Receipts)      
     },[dispatch,token])
-    
-
-    useEffect(() => {
-
-        if (selectedreceipts.length > 0) {
-            const receiptbody = selectedreceipts.map((receipt,index) => (
-                <div key={index}>
-                    <strong>Receipt ID:</strong> {receipt.id}<br/>
-                    <strong>Price:</strong> ${numberWithCommas(receipt.price)}<br/>
-                    <strong>Products:</strong>
-                    <ul>
-                        {formatProducts(receipt.products)}
-                    </ul>
-                </div>
-            ));
-
-            setreceiptList(receiptbody)
-            setshowmodal(Modals.Receipts)
-        }
-    }, [dispatch,formatProducts,GetProductName,selectedreceipts])
-    
-
-
 
     useEffect(() => {
         dispatch(updateStatus("pending"))
         dispatch(getAdminCustomersAsync(token))
         dispatch(getAdminProductsAsync(token))
     }, [dispatch, token])
+    
+
+    useEffect(() => {
+        if (status === "done") {
+            if (selectedreceipts.length > 0 && showmodal === Modals.Receipts) {
+                const receiptbody = selectedreceipts.map((receipt,index) => (
+                    <div key={index}>
+                        <strong>Receipt ID:</strong> {receipt.id}<br/>
+                        <strong>Price:</strong> ${numberWithCommas(receipt.price)}<br/>
+                        <strong>Products:</strong>
+                        <ul>
+                            {formatProducts(receipt.products)}
+                        </ul>
+                    </div>
+                ));
+
+                setreceiptList(receiptbody)
+                // setshowmodal(Modals.Receipts)
+            }
+        }
+    }, [status, showmodal, dispatch,formatProducts,GetProductName,selectedreceipts])
+    
+
+
+
+
 
     useEffect(() => {
         if (status === "done") {
