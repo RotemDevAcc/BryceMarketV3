@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { clearCart, removeProduct, selectCart, selectPrice } from './cartSlice'
-import { purchaseCart } from './superSlice';
 import { Modal, Button } from 'react-bootstrap';
 import { get_user_token } from '../login/loginSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBroom, faCashRegister, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { purchaseCartAsync } from './superSlice';
 
 const Cart = () => {
     const myCart = useAppSelector(selectCart)
@@ -25,9 +25,8 @@ const Cart = () => {
 
     const handleConfirm = () => {
         handleClose();
-        
-        console.log(myCart)
-        dispatch(purchaseCart({"cart":myCart,"token":token,"price":Number(totalPrice)}));
+
+        dispatch(purchaseCartAsync({cart:myCart,price:totalPrice,token}));
     };
 
     const handleCancel = () => {

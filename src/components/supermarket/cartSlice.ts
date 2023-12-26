@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Message } from '../../Message';
 import { WritableDraft } from 'immer/dist/internal';
+import { SProductDetails, purchaseCartAsync } from './superSlice';
 
 
 export interface ProductDetails {
@@ -74,6 +75,13 @@ export const cartSlice = createSlice({
         Message("Cart Cleared","success")
     }
   },
+  extraReducers: (builder) => {
+    builder
+    .addCase(purchaseCartAsync.fulfilled, (state,action) => {
+        state.products = []
+        state.totalPrice = 0.0
+    })
+  },
 });
 
 export const { addProduct,removeProduct,clearCart } = cartSlice.actions;
@@ -81,7 +89,7 @@ export const { addProduct,removeProduct,clearCart } = cartSlice.actions;
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.cart.value)`
-export const selectCart = (state: RootState) => state.cart.products;
+export const selectCart = (state: RootState) => state.cart.products as SProductDetails[];
 export const selectPrice = (state: RootState) => state.cart.totalPrice;
 
 export default cartSlice.reducer;

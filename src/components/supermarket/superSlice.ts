@@ -1,6 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchProducts } from './superAPI';
 import { buyCart } from './superAPI';
+import { Message } from '../../Message';
+import { clearCart } from './cartSlice';
+
 
 export interface SProductDetails {
     id: number;
@@ -44,6 +47,15 @@ export const getDataAsync = createAsyncThunk(
     }
 );
 
+export const purchaseCartAsync = createAsyncThunk(
+  'super/purchaseCart',
+   async(details:{cart:SProductDetails[],price:number,token:string}) => {
+    const response = await buyCart(details);
+    clearCart()
+    return response.data;
+   }
+);
+
 
 
 export const superSlice = createSlice({
@@ -51,18 +63,18 @@ export const superSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    purchaseCart:(state,payload)=>{
-      const pl = payload.payload
-      const cart = pl.cart
-      const token = pl.token
-      const price = pl.price
-      const data = {
-        "cart":cart,
-        "token":token,
-        "price":price
-      }
-      buyCart(data)
-    },
+    // purchaseCart:(state,payload)=>{
+    //   const pl = payload.payload
+    //   const cart = pl.cart
+    //   const token = pl.token
+    //   const price = pl.price
+    //   const data = {
+    //     "cart":cart,
+    //     "token":token,
+    //     "price":price
+    //   }
+    //   const result = buyCart(data)
+    // },
 
 
     
@@ -80,11 +92,15 @@ export const superSlice = createSlice({
       .addCase(getDataAsync.pending, (state, action) => {
         state.status = "loading";
       })
+
+      .addCase(purchaseCartAsync.fulfilled, (state,action) => {
+        Message("Cart Purchased Successfully","success")
+      })
   },
   
 });
 
-export const { purchaseCart } = superSlice.actions;
+// export const { purchaseCart } = superSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

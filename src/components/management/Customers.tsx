@@ -100,6 +100,8 @@ const Customers = () => {
 
 
     const GetProductName = useCallback((productid: number) => {
+        console.log(allproducts)
+        if(!allproducts || !allproducts.length) return 'Product not Found';
         const foundProduct = allproducts.find(product => Number(product.id) === Number(productid));
         return foundProduct ? foundProduct.name : 'Product Not Found';
     }, [allproducts])
@@ -131,7 +133,7 @@ const Customers = () => {
     
 
     useEffect(() => {
-        if (status === "done") {
+        if (status === "done" && allproducts && allproducts.length > 0) {
             if (selectedreceipts.length > 0 && showmodal === Modals.Receipts) {
                 const receiptbody = selectedreceipts.map((receipt,index) => (
                     <div key={index}>
@@ -143,12 +145,10 @@ const Customers = () => {
                         </ul>
                     </div>
                 ));
-
                 setreceiptList(receiptbody)
-                // setshowmodal(Modals.Receipts)
             }
         }
-    }, [status, showmodal, dispatch,formatProducts,GetProductName,selectedreceipts])
+    }, [status, showmodal, dispatch,formatProducts,GetProductName,selectedreceipts, allproducts])
     
 
 

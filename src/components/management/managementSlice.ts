@@ -362,10 +362,12 @@ export const managementSlice = createSlice({
                     return
                 }
                 if (payload.state === "success") {
+                    console.log(payload)
                     const receipts = payload.payload;
+                    state.products = payload.products
                     receipts.sort((a:any, b:any) => b.id - a.id);
                     state.allreceipts = receipts
-                    state.products = payload.products
+                    
                 } else {
                     Message(payload.message, "error")
                 }

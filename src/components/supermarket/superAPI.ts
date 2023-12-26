@@ -1,17 +1,18 @@
 import axios from 'axios'
 import { TargetServer } from '../settings/settings';
 import { Message } from '../../Message';
+import { SProductDetails } from './superSlice';
 export function fetchProducts() {
     return axios.get(`${TargetServer}productslist/`)
 }
 
-export const buyCart = async (data: { cart?: []; token: string; price?: number; })=> {
+export const buyCart = async (details: { cart?: SProductDetails[]; price?: number; token: string; })=> {
     
 
     try {
-        const response = await axios.post(`${TargetServer}productslist/`, data, {
+        const response = await axios.post(`${TargetServer}productslist/`, details, {
             headers: {
-                "Authorization": `Bearer ${data.token}`,
+                "Authorization": `Bearer ${details.token}`,
                 'Content-Type': 'application/json',
             },
         });
@@ -21,20 +22,4 @@ export const buyCart = async (data: { cart?: []; token: string; price?: number; 
         Message(error.response.data.detail, "error");
         throw error;
     }
-
-    // const response = await fetch(MY_SERVER + "/productslist/", {
-    //     method: "POST",
-    //     headers: {
-    //         "Authorization": `Bearer ${myToken}`,
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ "cart": cart, "price": totalPrice })
-    // })
-    // const result = await response.json();
-    // if (result.state == "success") {
-    //     Message(result.msg, "success")
-    //     clearCart()
-    // } else {
-    //     Message(result.msg, "error")
-    // }
 }
