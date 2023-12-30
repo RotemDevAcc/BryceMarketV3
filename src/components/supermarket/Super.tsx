@@ -80,8 +80,17 @@ const Super = () => {
                     </div>
                 </div>
             ));
-
-            setFilteredProducts(productsList);
+            
+            
+            if(productsList && productsList.length <= 0){
+                const NoProducts = <div>
+                    <h3>No Products found with the name: {searchQuery}</h3>
+                </div>
+                setFilteredProducts([NoProducts]);
+            }else{
+                setFilteredProducts(productsList);
+            }
+            
         }
     }, [MY_SERVER, supercategories, searchQuery, status, superproducts, dispatch]);
 
@@ -118,8 +127,18 @@ const Super = () => {
                 </li>
             ));
 
+            
+
             setMappedCategories(categoriesList);
-            setMappedProducts(productsList);
+            if(productsList && productsList.length <= 0){
+                const NoProducts = <div key={"noprod"}>
+                    <h3>No Products Are Available In this Category.</h3>
+                </div>
+                setMappedProducts([NoProducts]);
+            }else{
+                setMappedProducts(productsList);
+            }
+            
         } else {
             setMappedProducts([]);
             setMappedCategories([]);

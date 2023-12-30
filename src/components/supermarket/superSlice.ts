@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchProducts } from './superAPI';
 import { buyCart } from './superAPI';
 import { Message } from '../../Message';
-import { clearCart } from './cartSlice';
 
 
 export interface SProductDetails {
@@ -51,7 +50,6 @@ export const purchaseCartAsync = createAsyncThunk(
   'super/purchaseCart',
    async(details:{cart:SProductDetails[],price:number,token:string}) => {
     const response = await buyCart(details);
-    clearCart()
     return response.data;
    }
 );

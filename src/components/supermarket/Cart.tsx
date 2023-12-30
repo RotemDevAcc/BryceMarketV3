@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBroom, faCashRegister, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { purchaseCartAsync } from './superSlice';
+import Paypal from './Paypal';
 
 const Cart = () => {
     const myCart = useAppSelector(selectCart)
@@ -59,6 +60,7 @@ const Cart = () => {
                         Checkout{' '}
                         <FontAwesomeIcon icon={faCashRegister} />
                     </button>
+                    
                     <button className="btn btn-danger" onClick={() => dispatch(clearCart())}>
                         Clear Cart{' '}
                         <FontAwesomeIcon icon={faBroom} />
@@ -73,12 +75,13 @@ const Cart = () => {
                 </Modal.Header>
                 <Modal.Body>{modalmessage}</Modal.Body>
                 <Modal.Footer>
+                    {totalPrice > 0.0 ? <Paypal price={totalPrice}></Paypal> : <>No Products Selected</>}
                     <Button variant="secondary" onClick={handleCancel}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={handleConfirm}>
+                    {/* <Button variant="primary" onClick={handleConfirm}>
                         Confirm
-                    </Button>
+                    </Button> */}
                 </Modal.Footer>
             </Modal>
         </div>
