@@ -4,41 +4,60 @@ import { Modal, Button } from 'react-bootstrap';
 import { get_user_token } from '../login/loginSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBroom, faCashRegister, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import { purchaseCartAsync } from './superSlice';
+import { faBroom, faCashRegister, faShoppingCart, faTicket } from '@fortawesome/free-solid-svg-icons';
+import { getCouponAsync, purchaseCartAsync, selectcoupon } from './superSlice';
 import Paypal from './Paypal';
+import { Message } from '../../Message';
+
+
+const Modals = {
+    purchase: 1,
+    coupon: 2,
+    hide: 0
+}
 
 const Cart = () => {
     const myCart = useAppSelector(selectCart)
     const token = useAppSelector(get_user_token);
-    const totalPrice = useAppSelector(selectPrice)
+    const totalPrice = useAppSelector(selectPrice);
+    const VerifiedCoupon = useAppSelector(selectcoupon);
     const dispatch = useAppDispatch();
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(Modals.hide);
     const [modalmessage, setModalMessage] = useState("")
-    const handleClose = () => setShowModal(false);
-    const handleShow = () => setShowModal(true);
+    const [Coupon, setCoupon] = useState("")
 
     const show_dialog = async () => {
         const confirmationMessage = `Are you sure you want to purchase all the items for $${totalPrice}?`;
         setModalMessage(confirmationMessage);
-        handleShow();
+        setShowModal(Modals.purchase);
     };
 
     const handleConfirm = () => {
-        handleClose();
-
+        setShowModal(Modals.hide)
         dispatch(purchaseCartAsync({cart:myCart,price:totalPrice,token}));
-    };
+    }
 
     const handleCancel = () => {
-        handleClose();
-    };
+        setShowModal(Modals.hide)
+    }
+
+    const VerifyCoupon = () => {
+        if(!Coupon || Coupon === ""){
+            Message("You need to enter a coupon code","error")
+            return
+        }
+        dispatch(getCouponAsync({token:token,coupon:Coupon}));
+        handleCancel()
+    }
+
     return (
         <div>
             <div className="card">
                 <div className="card-header">
                     Shopping Cart{' '}
                     <FontAwesomeIcon icon={faShoppingCart}/>
+                    {VerifiedCoupon ? <>1</> : <>2</>}
+                    <button onClick={()=>console.log(VerifiedCoupon)}></button>
                 </div>
                 <ul className="list-group list-group-flush" id="cart-items">
                     {myCart.map((prod, index) => (
@@ -52,10 +71,8 @@ const Cart = () => {
                 </ul>
                 <div className="card-body">
                     <h5>${totalPrice}</h5>
-                    {/* <div className="card-header"> */}
 
 
-                    {/* </div> */}
                     <button className="btn btn-primary" onClick={() => show_dialog()} style={{ margin: 5 }}>
                         Checkout{' '}
                         <FontAwesomeIcon icon={faCashRegister} />
@@ -65,12 +82,20 @@ const Cart = () => {
                         Clear Cart{' '}
                         <FontAwesomeIcon icon={faBroom} />
                     </button>
+                    
+                    
+                    {/* <button className="btn btn-primary" onClick={() => VerifyCoupon()} style={{ margin: 5 }}> */}
+                    <button className="btn btn-primary" onClick={() => setShowModal(Modals.coupon)} style={{ margin: 5 }}>
+                        Coupon Code{' '}
+                        <FontAwesomeIcon icon={faTicket} />
+                    </button>
 
 
                 </div>
             </div>
-            <Modal show={showModal} onHide={handleClose}>
-                <Modal.Header closeButton>
+
+            <Modal show={showModal === Modals.purchase} onHide={()=>Modals.hide}>
+                <Modal.Header>
                     <Modal.Title>Confirmation</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>{modalmessage}</Modal.Body>
@@ -83,6 +108,24 @@ const Cart = () => {
                         Confirm
                     </Button> */}
                 </Modal.Footer>
+            </Modal>
+
+            <Modal show={showModal === Modals.coupon} onHide={()=>Modals.hide}>
+                <Modal.Header>
+                    <Modal.Title>Enter A Coupon Code</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{modalmessage}
+                    <input className="form-control" type="text" id="CouponForm" name="coupon" value={Coupon} onChange={(e)=>setCoupon(e.target.value)} required />
+                    <br/>
+                    <Button variant="primary" onClick={VerifyCoupon}>
+                        Enter
+                    </Button>{' '}
+                    <Button variant="secondary" onClick={handleCancel}>
+                        Cancel
+                    </Button>
+                </Modal.Body>
+
+
             </Modal>
         </div>
     )

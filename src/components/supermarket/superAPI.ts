@@ -23,3 +23,19 @@ export const buyCart = async (details: { cart?: SProductDetails[]; price?: numbe
         throw error;
     }
 }
+
+export const getCoupon = async (details: { token: string, coupon: string })=> {
+    try {
+        const response = await axios.post(`${TargetServer}getcoupon/`, details, {
+            headers: {
+                "Authorization": `Bearer ${details.token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        return response;
+    } catch (error:any) {
+        console.error('Error while sending data to the server:', error);
+        Message(error.response.data.detail, "error");
+        throw error;
+    }
+}

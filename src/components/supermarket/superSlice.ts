@@ -1,29 +1,37 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchProducts } from './superAPI';
+import { fetchProducts, getCoupon } from './superAPI';
 import { buyCart } from './superAPI';
 import { Message } from '../../Message';
 
 
 export interface SProductDetails {
-    id: number;
-    category: number;
-    name: string;
-    desc: string;
-    price: number;
-    img: string;
-    count: number
+  id: number;
+  category: number;
+  name: string;
+  desc: string;
+  price: number;
+  img: string;
+  count: number
 }
 
 export interface SCategoryDetails {
-    id: number;
-    desc: string;
+  id: number;
+  desc: string;
+}
+
+export interface CouponDetails {
+  id: number;
+  percent: number;
+  min_price: number;
+  desc: string;
 }
 
 
 export interface SuperInterface {
-    products:SProductDetails[],
-    status: string,
-    categories:SCategoryDetails[]
+  products:SProductDetails[],
+  categories:SCategoryDetails[],
+  status: string,
+  coupon: CouponDetails[],
 }
 
 
@@ -34,8 +42,9 @@ interface RootState {
 
 const initialState:SuperInterface = {
   products:[],
+  categories:[],
   status:"",
-  categories:[]
+  coupon:[]
 };
 
 export const getDataAsync = createAsyncThunk(
@@ -52,6 +61,14 @@ export const purchaseCartAsync = createAsyncThunk(
     const response = await buyCart(details);
     return response.data;
    }
+);
+
+export const getCouponAsync = createAsyncThunk(
+  'super/getCoupon',
+  async(details:{token:string,coupon:string}) => {
+   const response = await getCoupon(details);
+   return response.data;
+  }
 );
 
 
@@ -84,15 +101,35 @@ export const superSlice = createSlice({
         state.categories = action.payload.categories
         state.status ='done'
       })
-      .addCase(getDataAsync.rejected, (state, action) => {
+      .addCase(getDataAsync.rejected, (state) => {
         state.status ='rejected'
       })
-      .addCase(getDataAsync.pending, (state, action) => {
+      .addCase(getDataAsync.pending, (state) => {
         state.status = "loading";
       })
 
-      .addCase(purchaseCartAsync.fulfilled, (state,action) => {
+      .addCase(purchaseCartAsync.fulfilled, (state) => {
         Message("Cart Purchased Successfully","success")
+        state.coupon = []
+        // Cart Cleared in cartSlice.ts
+      })
+
+      .addCase(getCouponAsync.fulfilled, (state,action) => {
+        const payload = action.payload
+        if(payload){
+          if(payload.success){
+            Message(payload.message,"success")
+            
+            if(state.coupon){
+              Message("Replacing Current Coupon","info")
+            }
+           
+            state.coupon = payload.coupon
+            console.log(state.coupon)
+          }else{
+            Message(payload.message,"error")
+          }
+        }
       })
   },
   
@@ -106,4 +143,5 @@ export const superSlice = createSlice({
 export const selectproducts = (state: RootState) => state.super.products;
 export const selectcategories = (state: RootState) => state.super.categories;
 export const selectstatus = (state: RootState) => state.super.status;
+export const selectcoupon = (state: RootState) => state.super.coupon;
 export default superSlice.reducer;
