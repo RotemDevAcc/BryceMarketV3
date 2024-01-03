@@ -90,6 +90,13 @@ export const superSlice = createSlice({
     //   }
     //   const result = buyCart(data)
     // },
+    clearCoupon:(state)=>{
+      if(state.coupon){
+        state.coupon = [];
+        Message("Coupon Cleared","success")
+      }
+      
+    }
 
 
     
@@ -135,7 +142,7 @@ export const superSlice = createSlice({
   
 });
 
-// export const { purchaseCart } = superSlice.actions;
+export const { clearCoupon } = superSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

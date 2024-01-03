@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { clearCart, removeProduct, selectCart, selectPrice } from './cartSlice'
 import { Modal, Button } from 'react-bootstrap';
 import { get_user_token } from '../login/loginSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBroom, faCashRegister, faShoppingCart, faTicket } from '@fortawesome/free-solid-svg-icons';
-import { getCouponAsync, purchaseCartAsync, selectcoupon } from './superSlice';
+import { CouponDetails, clearCoupon, getCouponAsync, purchaseCartAsync, selectcoupon } from './superSlice';
 import Paypal from './Paypal';
 import { Message } from '../../Message';
 
@@ -17,11 +17,11 @@ const Modals = {
 }
 
 const Cart = () => {
+    const dispatch = useAppDispatch();
     const myCart = useAppSelector(selectCart)
     const token = useAppSelector(get_user_token);
     const totalPrice = useAppSelector(selectPrice);
     const VerifiedCoupon = useAppSelector(selectcoupon);
-    const dispatch = useAppDispatch();
     const [showModal, setShowModal] = useState(Modals.hide);
     const [modalmessage, setModalMessage] = useState("")
     const [Coupon, setCoupon] = useState("")
@@ -48,7 +48,7 @@ const Cart = () => {
         }
         dispatch(getCouponAsync({token:token,coupon:Coupon}));
         handleCancel()
-    }
+    }    
 
     return (
         <div>
@@ -56,8 +56,6 @@ const Cart = () => {
                 <div className="card-header">
                     Shopping Cart{' '}
                     <FontAwesomeIcon icon={faShoppingCart}/>
-                    {VerifiedCoupon ? <>1</> : <>2</>}
-                    <button onClick={()=>console.log(VerifiedCoupon)}></button>
                 </div>
                 <ul className="list-group list-group-flush" id="cart-items">
                     {myCart.map((prod, index) => (
@@ -84,11 +82,16 @@ const Cart = () => {
                     </button>
                     
                     
-                    {/* <button className="btn btn-primary" onClick={() => VerifyCoupon()} style={{ margin: 5 }}> */}
+                    {VerifiedCoupon.length !== 0 ? <>
+                    {/* <h4>Current Coupon: %{VerifiedCoupon[0].percent}</h4> */}
+                    <button className='btn btn-danger' onClick={()=>dispatch(clearCoupon())} style={{margin: 5}}>Remove Coupon</button> 
+                    </>
+                    : 
                     <button className="btn btn-primary" onClick={() => setShowModal(Modals.coupon)} style={{ margin: 5 }}>
                         Coupon Code{' '}
                         <FontAwesomeIcon icon={faTicket} />
-                    </button>
+                    </button>}
+                    
 
 
                 </div>
