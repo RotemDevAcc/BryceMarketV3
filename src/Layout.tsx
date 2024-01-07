@@ -123,7 +123,7 @@ const Layout = () => {
     return (
         <div>
             <header className="bg-dark text-white">
-                {logged ? <img src={`${TargetServer}/static/images/${myDetails.img || "placeholder.png"}`} alt="Profile Logo" className="navbar-brand img-fluid" height="40px" width="40px" style={{ borderRadius: "50px" }} /> : <></>}
+                {logged ? <img src={`${TargetServer}/static/images/${myDetails.img || "placeholder.png"}`} alt="Profile Logo" className="navbar-brand img-fluid" height="40px" width="40px" style={{ borderRadius: "30px" }} /> : <></>}
 
                 <div className="container">
                     <h1>{headerText}</h1>

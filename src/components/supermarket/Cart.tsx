@@ -82,8 +82,10 @@ const Cart = () => {
                     </button>
                     
                     
-                    {VerifiedCoupon.length !== 0 ? <>
-                    {/* <h4>Current Coupon: %{VerifiedCoupon[0].percent}</h4> */}
+                    {VerifiedCoupon.percent ? <>
+                    <h4>Current Coupon: {VerifiedCoupon.percent}%</h4>
+                    {totalPrice > 0 ? <h4>Price With Coupon: {(totalPrice - (VerifiedCoupon.percent / 100) * totalPrice).toFixed(2) }</h4> : <></>}
+                    
                     <button className='btn btn-danger' onClick={()=>dispatch(clearCoupon())} style={{margin: 5}}>Remove Coupon</button> 
                     </>
                     : 

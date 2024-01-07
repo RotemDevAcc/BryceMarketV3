@@ -31,7 +31,7 @@ export interface SuperInterface {
   products:SProductDetails[],
   categories:SCategoryDetails[],
   status: string,
-  coupon: CouponDetails[],
+  coupon: CouponDetails,
 }
 
 
@@ -44,7 +44,7 @@ const initialState:SuperInterface = {
   products:[],
   categories:[],
   status:"",
-  coupon:[]
+  coupon:{ id: 0, percent: 0, min_price: 0, desc: "" }
 };
 
 export const getDataAsync = createAsyncThunk(
@@ -92,7 +92,7 @@ export const superSlice = createSlice({
     // },
     clearCoupon:(state)=>{
       if(state.coupon){
-        state.coupon = [];
+        state.coupon = { id: 0, percent: 0, min_price: 0, desc: "" };
         Message("Coupon Cleared","success")
       }
       
@@ -117,7 +117,7 @@ export const superSlice = createSlice({
 
       .addCase(purchaseCartAsync.fulfilled, (state) => {
         Message("Cart Purchased Successfully","success")
-        state.coupon = []
+        state.coupon = { id: 0, percent: 0, min_price: 0, desc: "" }
         // Cart Cleared in cartSlice.ts
       })
 

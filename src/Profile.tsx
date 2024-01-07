@@ -137,7 +137,7 @@ const Profile = () => {
                 </>
             );
         } else {
-            const fullname = myDetails.firstname + ' ' + myDetails.lastname;
+            const fullname = `${myDetails.firstname || 'John'} ${myDetails.lastname || 'Doe'}`;
             setProfileHeader(
                 <>
                     Welcome {fullname} To Your Profile
@@ -166,10 +166,12 @@ const Profile = () => {
                         </div>
                     </div>
                     <div>
+                        <br />
                         <button id="receiptButton" className="btn btn-success" onClick={ShowReceipts}>
                             My Receipts{' '}
-                            <FontAwesomeIcon icon={faReceipt}/>
+                            <FontAwesomeIcon icon={faReceipt} />
                         </button>
+                        <br />
                         <ul>
                             <li>
                                 <FontAwesomeIcon icon={faUser} /> Username: {myDetails.username}
@@ -178,21 +180,19 @@ const Profile = () => {
                                 <FontAwesomeIcon icon={faEnvelope} /> Email: {myDetails.email}
                             </li>
                             <li>
-                                <FontAwesomeIcon icon={faCalendarAlt} /> Date Of Birth: {myDetails.dob}
+                                <FontAwesomeIcon icon={faCalendarAlt} /> Date Of Birth: {myDetails.dob || "Not Specified"}
                             </li>
                             <li>
-                                <FontAwesomeIcon icon={faVenusMars} /> Gender: {myDetails.gender}
+                                <FontAwesomeIcon icon={faVenusMars} /> Gender: {myDetails.gender || "Male"}
                             </li>
                             <li>
                                 <FontAwesomeIcon icon={faIdCard} /> Fullname: {fullname}
-                                <br />
-                                <button className="btn btn-primary" onClick={newName}>
-                                    
-                                    
-                                    Change Name
-                                </button>
                             </li>
                         </ul>
+                        <br />
+                        <button className="btn btn-primary" style={{ borderRadius: 20 }} onClick={newName}>
+                            Change Name
+                        </button>
                     </div>
                 </div>
             );
@@ -215,14 +215,11 @@ const Profile = () => {
                 <ul className="list-group">
                     {profileButtons}
                 </ul>
-            </div>
 
-            <div className="container mt-4">
+
+
                 <h2>Settings:</h2>
-                {/* <button className={darkMode ? "btn btn-primary" : "btn btn-secondary"} onClick={() => dispatch(toggleDarkMode())}>
-                    {darkMode ? 'Normal Mode' : 'Dark Mode'}
-                </button> */}
-                
+
                 <div className="custom-control custom-switch">
                     <input type="checkbox" className="custom-control-input" id="customSwitches" checked={darkMode}></input>
                     <label className="custom-control-label" htmlFor="customSwitches" onClick={() => dispatch(toggleDarkMode())}>{darkMode ? <FontAwesomeIcon icon={faMoon}></FontAwesomeIcon> : <FontAwesomeIcon icon={faSun}></FontAwesomeIcon>} Toggle Darkmode</label>
