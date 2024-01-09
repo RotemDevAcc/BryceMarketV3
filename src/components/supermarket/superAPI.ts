@@ -1,12 +1,12 @@
 import axios from 'axios'
 import { TargetServer } from '../settings/settings';
 import { Message } from '../../Message';
-import { SProductDetails } from './superSlice';
+import { SProductDetails, CouponDetails } from './superSlice';
 export function fetchProducts() {
     return axios.get(`${TargetServer}productslist/`)
 }
 
-export const buyCart = async (details: { cart?: SProductDetails[]; price?: number; token: string; })=> {
+export const buyCart = async (details: { cart?: SProductDetails[]; price?: number; token: string, coupon?:CouponDetails, orderid:string })=> {
     
 
     try {
@@ -19,7 +19,7 @@ export const buyCart = async (details: { cart?: SProductDetails[]; price?: numbe
         return response;
     } catch (error:any) {
         console.error('Error while sending data to the server:', error);
-        Message(error.response.data.detail, "error");
+        Message(error.response.data.msg, "error");
         throw error;
     }
 }
