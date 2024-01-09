@@ -70,9 +70,12 @@ export const cartSlice = createSlice({
         
     },
     clearCart:(state)=>{
-        state.products = []
-        state.totalPrice = 0.0
-        Message("Cart Cleared","success")
+        if(state.products && state.products?.length > 0){
+            state.products = []
+            state.totalPrice = 0.0
+            Message("Cart Cleared","success")
+        }
+        
     }
   },
   extraReducers: (builder) => {
