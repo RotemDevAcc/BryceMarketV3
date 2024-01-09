@@ -57,7 +57,7 @@ export const getDataAsync = createAsyncThunk(
 
 export const purchaseCartAsync = createAsyncThunk(
   'super/purchaseCart',
-   async(details:{cart:SProductDetails[],price:number,token:string}) => {
+   async(details:{cart:SProductDetails[],price:number,token:string, coupon:CouponDetails, orderid:string}) => {
     const response = await buyCart(details);
     return response.data;
    }
@@ -132,7 +132,6 @@ export const superSlice = createSlice({
             }
            
             state.coupon = payload.coupon
-            console.log(state.coupon)
           }else{
             Message(payload.message,"error")
           }
