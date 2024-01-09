@@ -43,7 +43,9 @@ export interface ReceiverUser {
 
 export interface AllReceiptDetails {
     id: number;
+    orderid: string;
     price:number;
+    discount:number;
     products:AllProductDetails[];
     recuser:ReceiverUser;
 }
