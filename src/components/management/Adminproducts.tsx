@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, ChangeEvent } from 'react'
-import { addAdminCategoryAsync, addAdminProductsAsync, editAdminProductsAsync, getAdminProductsAsync, get_admin_categories, get_admin_products, removeAdminProductsAsync, selectastatus } from './managementSlice'
+import { addAdminCategoryAsync, addAdminProductsAsync, editAdminProductsAsync, getAdminProductsAsync, get_admin_categories, get_admin_products, removeAdminProductsAsync, selectastatus, updateStatus } from './managementSlice'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { get_user_token } from '../login/loginSlice';
 import { TargetServer } from '../settings/settings';
@@ -117,12 +117,13 @@ const Adminproducts = () => {
 
 
     useEffect(() => {
+        dispatch(updateStatus("pending"))
         dispatch(getAdminProductsAsync(token))
     }, [dispatch, token])
 
     useEffect(() => {
-
-        let element =
+        if(status === "done" && allproducts && allproducts.length > 0){
+            let element =
             <div className="container mt-4">
                 <ul className="list-group">
                     <div className="row" style={{ display: "flex", flexWrap: "wrap" }}>
@@ -146,9 +147,10 @@ const Adminproducts = () => {
                 </ul>
             </div>
 
+            setdisplayprods(element)
+        }
 
-        setdisplayprods(element)
-    }, [allproducts, allcategories, GetCategoryName, manage_product])
+    }, [status, allproducts, allcategories, GetCategoryName, manage_product])
 
     const addProduct = () => {
         setshowModal(AdminModalTypes.NEW_PRODUCT)
