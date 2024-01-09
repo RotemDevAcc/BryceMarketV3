@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { clearCart, removeProduct, selectCart, selectPrice } from './cartSlice'
 import { Modal, Button } from 'react-bootstrap';
 import { get_user_token } from '../login/loginSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBroom, faCashRegister, faShoppingCart, faTicket } from '@fortawesome/free-solid-svg-icons';
-import { CouponDetails, clearCoupon, getCouponAsync, purchaseCartAsync, selectcoupon } from './superSlice';
+import { clearCoupon, getCouponAsync, selectcoupon } from './superSlice';
 import Paypal from './Paypal';
 import { Message } from '../../Message';
 
@@ -27,15 +27,14 @@ const Cart = () => {
     const [Coupon, setCoupon] = useState("")
 
     const show_dialog = async () => {
-        const confirmationMessage = `Are you sure you want to purchase all the items for $${totalPrice}?`;
+        let price = totalPrice
+        if(VerifiedCoupon && VerifiedCoupon.percent){
+            price = Number((totalPrice - (VerifiedCoupon.percent / 100) * totalPrice).toFixed(2))
+        }
+        const confirmationMessage = `Are you sure you want to purchase all the items for $${price}?`;
         setModalMessage(confirmationMessage);
         setShowModal(Modals.purchase);
     };
-
-    const handleConfirm = () => {
-        setShowModal(Modals.hide)
-        dispatch(purchaseCartAsync({cart:myCart,price:totalPrice,token}));
-    }
 
     const handleCancel = () => {
         setShowModal(Modals.hide)
@@ -105,13 +104,10 @@ const Cart = () => {
                 </Modal.Header>
                 <Modal.Body>{modalmessage}</Modal.Body>
                 <Modal.Footer>
-                    {totalPrice > 0.0 ? <Paypal price={totalPrice}></Paypal> : <>No Products Selected</>}
+                    {totalPrice > 0.0 ? <Paypal price={VerifiedCoupon && VerifiedCoupon.percent ? Number((totalPrice - (VerifiedCoupon.percent / 100) * totalPrice).toFixed(2)) : totalPrice}></Paypal> : <>No Products Selected</>}
                     <Button variant="secondary" onClick={handleCancel}>
                         Cancel
                     </Button>
-                    {/* <Button variant="primary" onClick={handleConfirm}>
-                        Confirm
-                    </Button> */}
                 </Modal.Footer>
             </Modal>
 
