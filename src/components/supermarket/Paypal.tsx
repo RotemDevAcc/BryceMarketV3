@@ -1,7 +1,17 @@
 import React from 'react'
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { Message } from '../../Message';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { purchaseCartAsync, selectcoupon } from './superSlice';
+import { selectCart, selectPrice } from './cartSlice';
+import { get_user_token } from '../login/loginSlice';
 const Paypal = (props:{price:number}) => {
 
+    const dispatch = useAppDispatch()
+    const myCart = useAppSelector(selectCart)
+    const token = useAppSelector(get_user_token);
+    const totalPrice = useAppSelector(selectPrice);
+    const VerifiedCoupon = useAppSelector(selectcoupon);
     const initialOptions = {
         clientId: "AUYRjtY2_vXsZMeIQWnqTM5JLYztUm3tqA_Wd-2Do5cHGISL-hKYAWg9Ua82DvEUbvIrvfHmjzBHdOlA",
         currency: "USD",
@@ -9,12 +19,7 @@ const Paypal = (props:{price:number}) => {
     };
 
     const handleApprove = (orderid:string) => {
-        // Call backend Function to fullfill order
-
-        // if response is sucess
-        // setPaidFor(true);
-        console.log(orderid)
-        console.log("Here")
+        dispatch(purchaseCartAsync({cart:myCart,price:totalPrice,token,coupon:VerifiedCoupon, orderid:orderid}));
     }
 
     return (
@@ -34,7 +39,9 @@ const Paypal = (props:{price:number}) => {
                     })
                 }}
                 onApprove={async (data,actions:any) => {
+                    Message("Order Sent, Please Wait.","info")
                     const order = await actions.order.capture();
+                    Message("Order Sent Successfully.","success")
                     console.log("order",order)
 
                     handleApprove(data.orderID)
