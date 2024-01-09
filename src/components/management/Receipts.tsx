@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { get_user_token } from '../login/loginSlice';
 import { AdmingetAllReceiptsAsync, get_admin_products, get_admin_allreceipts } from './managementSlice';
@@ -35,16 +35,14 @@ const Receipts = () => {
   }, [GetProductName])
 
   useEffect(() => {
-    if (allreceipts.length > 0) {
-
-
-
-      console.log(allreceipts)
+    if (allreceipts?.length > 0) {
       const receiptsBody = allreceipts.map((receipt, index) =>
-        <li className='list-group-item'>
+        <li key={index} className='list-group-item'>
           <strong>Receipt ID:</strong> {receipt.id}<br />
+          <strong>PayPal Order ID:</strong> {receipt.orderid || "No OrderID"}<br />
           <strong>User:</strong> {receipt.recuser.username} <span style={{ color: "#008000" }}>[{receipt.recuser.userid}]</span><br />
           <strong>Price:</strong> ${receipt.price}<br />
+          {receipt.discount && receipt.discount > 0 ? <><strong>Discount:</strong> {receipt.discount}%<br/></> : <></>}
           <strong>Products:</strong>
           <ul>
             {formatProducts(receipt.products)}
@@ -60,8 +58,6 @@ const Receipts = () => {
 
   useEffect(() => {
     dispatch(AdmingetAllReceiptsAsync(token))
-
-
   }, [dispatch, token])
 
 
